@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>什么是Vue应用和组件</title>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+    // mvvm 设计模式 model数据（data） view视图（模板） vm数据视图连接层（根组件）
+    // 创建 Vue 应用
+    const app = Vue.createApp({
+        // 根组件配置
+        // 数据
+        data() {
+            return {
+                message: 'Hello World'
+            }
+        },
+        // 模板
+        template: '<div>{{message}}</div>'
+    });
+
+    // 根组件
+    const vm = app.mount('#root');
+</script>
+
+</body>
+</html>

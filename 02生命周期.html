@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>什么是Vue应用和组件</title>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+
+    /*
+    mvvm 设计模式 model数据（data） view视图（模板） vm数据视图连接层（根组件）
+
+    onClick函数会在我们点击的时候被执行（手动执行）
+
+    [生命周期图示](https://v3.cn.vuejs.org/guide/instance.html#生命周期图示)
+    生命周期函数：在某个时刻会自动执行的函数
+     */
+
+    // 创建 Vue 应用
+    const app = Vue.createApp({
+        // 根组件配置
+        // 数据
+        data() {
+            return {
+                message: 'Hello World'
+            }
+        },
+        //方法
+        methods: {
+            onClick() {
+                alert('click');
+            }
+        },
+        // Vue 实例创建完成之前
+        beforeCreate() {
+            console.log('before create');
+        },
+        // Vue 实例创建完成之时
+        created() {
+            console.log('created');
+        },
+        // 模板渲染到页面之前
+        beforeMount() {
+            console.log('before mount');
+        },
+        // 模板渲染到页面完毕
+        mounted() {
+            console.log('mounted');
+        },
+        // 数据发生改变时  浏览器Console输入：vm.$data.message = "Hello, chry"
+        beforeUpdate() {
+            const content = document.getElementById('root').innerHTML;
+            console.log('before update => ' + content);
+        },
+        // 数据发生改变，并且页面重新渲染完毕
+        updated() {
+            const content = document.getElementById('root').innerHTML;
+            console.log('updated => ' + content);
+        },
+        // Vue应用失效时     浏览器Console输入：app.unmount()
+        beforeUnmount() {
+            const content = document.getElementById('root').innerHTML;
+            console.log('before unmount', content);
+        },
+        // Vue应用失效, 并且DOM完全移除完毕 此时浏览器Elements跟源码一样
+        unmounted() {
+            const content = document.getElementById('root').innerHTML;
+            console.log('unmounted =>' + content + '<=');
+        },
+        // 模板 vue会优先使用template配置的内容，没有声明template则使用root div内部的数据作为模板
+        template: '<div v-on:click="onClick">{{message}}</div>'
+    });
+
+    // 根组件
+    const vm = app.mount('#root');
+</script>
+
+</body>
+</html>

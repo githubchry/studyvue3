@@ -76,6 +76,8 @@
                 message: '<h1>Hello World</h1>',
                 dynamicId: 123,
                 show: true,
+                showIf: false,
+                showElseIf: true,
                 event: 'mouseenter',    // mouseenter  click
                 attr: 'test'
             }
@@ -96,7 +98,12 @@
             => v-html 插值内容不进行转义 <div v-html="message"></div> 此后div里面的内容无效，将替换成message的内容
             => v-bind:属性 绑定如id name等属性 <div v-bind:id="dynamicId"></div>
                 缩写形式 `:` <div :id="dynamicId"></div>
-            => v-if 控制控件的显示隐藏 <div v-if="show">aaaaa</div>  如果变量show为false则不显示控件
+            => v-if v-else-if v-else 控制控件的显示隐藏(是否添加到DOM)  下面通过变量showIf和showElseIf来判断显示三个div控件中的哪一个
+                <div v-if="showIf">showIf is true</div>
+                <div v-else-if="showElseIf">showIf is false, showElseIf is true</div>
+                <div v-else>showIf is false, showElseIf is false</div>
+            => v-show 控制控件的显示隐藏(无论隐藏与否都会添加到DOM，通过添加style="display:none;"实现隐藏)
+                v-show与v-if v-else-if v-else这两种方式的选择： 如果控件显示和隐藏很频繁，选择v-show，反之，选择v-if v-else-if v-else
             => v-on 监听事件  <div v-on:click="onClick">点击弹出告警框</div>
                 事件类型 click点击事件  mouseenter鼠标指向事件 ......
                 缩写形式 `@`  <div @:click="onClick">点击弹出告警框</div>
@@ -106,7 +113,7 @@
          */
         template: `
           <div v-on:click="onClick" v-bind:id="dynamicId" v-html="message"></div>
-          <div @[event]="onClick" :[attr]="dynamicId" v-if="show">{{ 1 + 2 }}</div>
+          <div @[event]="onClick" :[attr]="dynamicId" v-show="show">{{ 1 + 2 }}</div>
         ` +
             /*
             默认行为：跳转到url
@@ -119,7 +126,11 @@
             //'<form action="https://www.baidu.com" @click="onSubmit">' +
             '<form action="https://www.baidu.com" @click.prevent="onClick">' +
             '   <button type="submit">提交</button>' +
-            '</form>'
+            '</form>' + `
+            <div v-if="showIf">showIf is true</div>
+            <div v-else-if="showElseIf">showIf is false, showElseIf is true</div>
+            <div v-else>showIf is false, showElseIf is false</div>
+        `
 
     });
 

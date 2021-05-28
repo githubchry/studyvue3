@@ -5,7 +5,68 @@
     <title>什么是Vue应用和组件</title>
 </head>
 <body>
-<div id="root"></div>
+<div id="root">
+
+    <!--
+        模板 vue会优先使用template配置的内容，没有声明template则使用root div内部的数据作为模板
+
+        模板字符串两种形式 ``和''
+
+        {{ data key }} 插值表达式 => 数值改变 重新渲染
+        v-xxx Vue指令
+        => v-once 只渲染一次 <div v-once>{{message}}</div>  数值改变 依旧引起渲染 但内容不会更新
+        => v-html 插值内容不进行转义 <div v-html="message"></div> 此后div里面的内容无效，将替换成message的内容
+        => v-bind:属性 绑定如id name等属性 <div v-bind:id="dynamicId"></div>
+            缩写形式 `:` <div :id="dynamicId"></div>
+        => v-if v-else-if v-else 控制控件的显示隐藏(是否添加到DOM)  下面通过变量showIf和showElseIf来判断显示三个div控件中的哪一个
+            <div v-if="showIf">showIf is true</div>
+            <div v-else-if="showElseIf">showIf is false, showElseIf is true</div>
+            <div v-else>showIf is false, showElseIf is false</div>
+        => v-show 控制控件的显示隐藏(无论隐藏与否都会添加到DOM，通过添加style="display:none;"实现隐藏)
+            v-show与v-if v-else-if v-else这两种方式的选择： 如果控件显示和隐藏很频繁，选择v-show，反之，选择v-if v-else-if v-else
+        => v-on 监听事件  <div v-on:click="onClick">点击弹出告警框</div>
+            事件类型 click点击事件  mouseenter鼠标指向事件 ......
+            缩写形式 `@`  <div @:click="onClick">点击弹出告警框</div>
+            如果事件类型是变量：`@[事件变量]` <div @[event]="onClick">弹出告警框</div>
+        [arg] 动态参数
+        {{ 表达式 }} js表达式 要求结果可以赋值给一个变量 a=1+2 => <div>{{ 1 + 2 }}</div>
+
+        template: `
+        ` +
+        /*
+
+        禁止默认行为的两种方式：
+        1.在监听提交按钮事件，里面加入 e.preventDefault
+        2.使用vue的修饰符`.xxx`  @click.prevent
+        */
+    -->
+
+    <div v-on:click="onClick" v-bind:id="dynamicId" v-html="message"></div>
+    <div @[event]="onClick" :[attr]="dynamicId" v-show="show">{{ 1 + 2 }}</div>
+
+    <!--
+    form action 默认行为：跳转到url
+    禁止默认行为的两种方式：
+        1.在监听提交按钮事件，里面加入 e.preventDefault
+        2.使用vue的修饰符`.xxx`  @click.prevent
+    -->
+    <form action="https://www.baidu.com">
+        <button type="submit">默认提交</button>
+    </form>
+
+    <form action="https://www.baidu.com" @click="onSubmit">
+        <button type="submit">提交</button>
+    </form>
+
+    <form action="https://www.baidu.com" @click.prevent="onClick">
+        <button type="submit">提交</button>
+    </form>
+
+    <div v-if="showIf">showIf is true</div>
+    <div v-else-if="showElseIf">showIf is false, showElseIf is true</div>
+    <div v-else>showIf is false, showElseIf is false</div>
+
+</div>
 
 <script src="https://unpkg.com/vue@next"></script>
 <script>
@@ -22,44 +83,6 @@
     // 创建 Vue 应用
     const app = Vue.createApp({
         // 根组件配置
-
-        // Vue 实例创建完成之前
-        beforeCreate() {
-            console.log('before create');
-        },
-        // Vue 实例创建完成之时
-        created() {
-            console.log('created');
-        },
-        // 模板渲染到页面之前
-        beforeMount() {
-            console.log('before mount');
-        },
-        // 模板渲染到页面完毕
-        mounted() {
-            console.log('mounted');
-        },
-        // 数据发生改变时  浏览器Console输入：vm.$data.message = "Hello, chry"
-        beforeUpdate() {
-            const content = document.getElementById('root').innerHTML;
-            console.log('before update => ' + content);
-        },
-        // 数据发生改变，并且页面重新渲染完毕
-        updated() {
-            const content = document.getElementById('root').innerHTML;
-            console.log('updated => ' + content);
-        },
-        // Vue应用失效时     浏览器Console输入：app.unmount()
-        beforeUnmount() {
-            const content = document.getElementById('root').innerHTML;
-            console.log('before unmount', content);
-        },
-        // Vue应用失效, 并且DOM完全移除完毕 此时浏览器Elements跟源码一样
-        unmounted() {
-            const content = document.getElementById('root').innerHTML;
-            console.log('unmounted =>' + content + '<=');
-        },
-
         //方法
         methods: {
             onClick() {
@@ -81,57 +104,7 @@
                 event: 'mouseenter',    // mouseenter  click
                 attr: 'test'
             }
-        },
-        /*
-        模板 vue会优先使用template配置的内容，没有声明template则使用root div内部的数据作为模板
-
-        模板字符串两种形式 ``和''
-            template: '<div>{{message}}</div>' + '<div>{{message}}</div>'
-            template: `
-                <div>{{message}}</div>
-                <div>{{message}}</div>
-            `
-
-        {{ data key }} 插值表达式 => 数值改变 重新渲染
-        v-xxx Vue指令
-            => v-once 只渲染一次 <div v-once>{{message}}</div>  数值改变 依旧引起渲染 但内容不会更新
-            => v-html 插值内容不进行转义 <div v-html="message"></div> 此后div里面的内容无效，将替换成message的内容
-            => v-bind:属性 绑定如id name等属性 <div v-bind:id="dynamicId"></div>
-                缩写形式 `:` <div :id="dynamicId"></div>
-            => v-if v-else-if v-else 控制控件的显示隐藏(是否添加到DOM)  下面通过变量showIf和showElseIf来判断显示三个div控件中的哪一个
-                <div v-if="showIf">showIf is true</div>
-                <div v-else-if="showElseIf">showIf is false, showElseIf is true</div>
-                <div v-else>showIf is false, showElseIf is false</div>
-            => v-show 控制控件的显示隐藏(无论隐藏与否都会添加到DOM，通过添加style="display:none;"实现隐藏)
-                v-show与v-if v-else-if v-else这两种方式的选择： 如果控件显示和隐藏很频繁，选择v-show，反之，选择v-if v-else-if v-else
-            => v-on 监听事件  <div v-on:click="onClick">点击弹出告警框</div>
-                事件类型 click点击事件  mouseenter鼠标指向事件 ......
-                缩写形式 `@`  <div @:click="onClick">点击弹出告警框</div>
-                如果事件类型是变量：`@[事件变量]` <div @[event]="onClick">弹出告警框</div>
-        [arg] 动态参数
-        {{ 表达式 }} js表达式 要求结果可以赋值给一个变量 a=1+2 => <div>{{ 1 + 2 }}</div>
-         */
-        template: `
-          <div v-on:click="onClick" v-bind:id="dynamicId" v-html="message"></div>
-          <div @[event]="onClick" :[attr]="dynamicId" v-show="show">{{ 1 + 2 }}</div>
-        ` +
-            /*
-            默认行为：跳转到url
-            禁止默认行为的两种方式：
-                1.在监听提交按钮事件，里面加入 e.preventDefault
-                2.使用vue的修饰符`.xxx`  @click.prevent
-             */
-
-            //'<form action="https://www.baidu.com">' +
-            //'<form action="https://www.baidu.com" @click="onSubmit">' +
-            '<form action="https://www.baidu.com" @click.prevent="onClick">' +
-            '   <button type="submit">提交</button>' +
-            '</form>' + `
-            <div v-if="showIf">showIf is true</div>
-            <div v-else-if="showElseIf">showIf is false, showElseIf is true</div>
-            <div v-else>showIf is false, showElseIf is false</div>
-        `
-
+        }
     });
 
     // 根组件

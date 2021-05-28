@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>样式绑定</title>
+    <style>
+        .blueColor {
+            color: blue;
+        }
+
+        .orangeColor {
+            color: orange;
+        }
+
+        .bigFontSize {
+            font-size: 20px;
+        }
+
+        .smallFontSize {
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="root">
+    <!--样式绑定的7种方法-->
+    <div class="blueColor">原生样式绑定</div>
+    <div :class="classString">v-bind class name</div>
+    <div :class="classObject">v-bind class object</div>
+    <div :class="classArray">v-bind class array</div>
+    <br>
+    <br>
+    <div style="color: blueviolet">内联样式绑定</div>
+    <div :style="styleString">v-bind style name</div>
+    <div :style="styleObject">v-bind style object</div>
+    <br>
+    <br>
+    <!--子组件-->
+    <div class="orangeColor">
+        组件只有一个最外层元素时，样式可自动继承当前组件样式 child class="blueColor"
+        <child class="blueColor"></child>
+    </div>
+    <br>
+    <br>
+    <div class="orangeColor">
+        组件有多个最外层元素时，样式无法继承当前组件样式，twins 没有变成蓝色，而是变成更外层的橙色
+        <twins class="blueColor"></twins>
+    </div>
+    <br>
+    <br>
+    <div class="blueColor">
+        组件有多个最外层元素时，样式无法继承当前组件样式，assign-twins 模板里面分别指定绑定当前组件class属性，所以下面两个都是橙色
+        <assign-twins class="orangeColor"></assign-twins>
+    </div>
+</div>
+
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+
+
+    // 创建 Vue 应用
+    const app = Vue.createApp({
+        // 根组件配置
+        // 数据
+        data() {
+            return {
+                classString: 'orangeColor smallFontSize',
+                classObject: {
+                    orangeColor: true,
+                    blueColor: true,    // 同样的样式字段，后者覆盖前者
+                    bigFontSize: true
+                },
+                classArray: [{orangeColor: false}, 'smallFontSize'],
+                styleString: 'color: blueviolet; font-size: 20px',
+                styleObject: {
+                    color: 'blue',
+                    fontSize: '30px'    // font-size 驼峰命名=> fontSize
+                }
+            }
+        },
+
+    });
+
+    // 创建子组件
+    app.component('child', {
+        template: `
+        <div>child子组件下只有一个div</div>
+        `
+    });
+
+    app.component('twins', {
+        template: `
+        <div>twins 1</div>
+        <div>twins 2</div>
+        `
+    });
+
+    app.component('assign-twins', {
+        template: `
+        <div :class="$attrs.class">assign-twins 1</div>
+        <div :class="$attrs.class">assign-twins 2</div>
+        `
+    });
+
+    // 根组件
+    const vm = app.mount('#root');
+</script>
+
+</body>
+</html>

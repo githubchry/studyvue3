@@ -22,6 +22,10 @@
             <div v-if="showIf">showIf is true</div>
             <div v-else-if="showElseIf">showIf is false, showElseIf is true</div>
             <div v-else>showIf is false, showElseIf is false</div>
+        => v-for 列表渲染 对数组和对象进行遍历并渲染都控件 配合 :key 优化性能只渲染被改变和新增的项
+            <div v-for="color in colors">{{color}}</div>
+            <div v-for="(color, index) in colors" :key="index">{{index}} | {{color}}</div>
+            <div v-for="(value, key, index) in person">{{index}} | {{key}} | {{value}}</div>
         => v-show 控制控件的显示隐藏(无论隐藏与否都会添加到DOM，通过添加style="display:none;"实现隐藏)
             v-show与v-if v-else-if v-else这两种方式的选择： 如果控件显示和隐藏很频繁，选择v-show，反之，选择v-if v-else-if v-else
         => v-on 监听事件  <div v-on:click="onClick">点击弹出告警框</div>
@@ -42,7 +46,9 @@
     -->
 
     <div v-on:click="onClick" v-bind:id="dynamicId" v-html="message"></div>
+    <hr>
     <div @[event]="onClick" :[attr]="dynamicId" v-show="show">{{ 1 + 2 }}</div>
+    <hr>
 
     <!--
     form action 默认行为：跳转到url
@@ -53,19 +59,44 @@
     <form action="https://www.baidu.com">
         <button type="submit">默认提交</button>
     </form>
-
+    <hr>
     <form action="https://www.baidu.com" @click="onSubmit">
         <button type="submit">提交</button>
     </form>
-
+    <hr>
     <form action="https://www.baidu.com" @click.prevent="onClick">
         <button type="submit">提交</button>
     </form>
+    <hr>
 
+    <!-- 条件渲染 -->
     <div v-if="showIf">showIf is true</div>
     <div v-else-if="showElseIf">showIf is false, showElseIf is true</div>
     <div v-else>showIf is false, showElseIf is false</div>
+    <hr>
 
+    <!-- 列表渲染 反例 动态增加colors数组长度还要手动添加div -->
+    <div>
+        <div>{{colors[0]}}</div>
+        <div>{{colors[1]}}</div>
+    </div>
+    <hr>
+
+    <button @click="addItem">新增</button>
+    <!-- 列表渲染 正例 使用 v-for  web控制台输入vm.$data.colors.push("chry")测试动态增加div -->
+    <div>
+        <div v-for="color in colors">{{color}}</div>
+    </div>
+    <hr>
+    <!-- 列表渲染 v-for获取数组元素和索引 使用指定:key优化vue渲染性能（只对新增和变化进行渲染）-->
+    <div>
+        <div v-for="(color, index) in colors" :key="index">{{index}} | {{color}}</div>
+    </div>
+    <hr>
+    <!-- 列表渲染 v-for获取对象的元素和索引 注意value, key, index三者顺序-->
+    <div>
+        <div v-for="(value, key, index) in person">{{index}} | {{key}} | {{value}}</div>
+    </div>
 </div>
 
 <script src="https://unpkg.com/vue@next"></script>
@@ -91,6 +122,10 @@
             onSubmit(e) {
                 e.preventDefault();
                 alert('默认的跳转行为已经被禁止');
+            },
+            addItem() {
+                // push pop shift unshift splice sort reverse
+                this.colors.push('newItem');
             }
         },
         // 数据
@@ -98,9 +133,15 @@
             return {
                 message: '<h1>Hello World</h1>',
                 dynamicId: 123,
-                show: true,
-                showIf: false,
-                showElseIf: true,
+                show: true,         // v-show
+                showIf: false,      // v-if 条件渲染
+                showElseIf: true,   // v-else-if 条件渲染
+                colors: ['red', 'green', 'blue'],    // v-for 列表渲染
+                person: {
+                    name: 'chry',
+                    age: 25,
+                    hobby: 'sleep'
+                },
                 event: 'mouseenter',    // mouseenter  click
                 attr: 'test'
             }

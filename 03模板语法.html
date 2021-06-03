@@ -26,6 +26,7 @@
             <div v-for="color in colors">{{color}}</div>
             <div v-for="(color, index) in colors" :key="index">{{index}} | {{color}}</div>
             <div v-for="(value, key, index) in person">{{index}} | {{key}} | {{value}}</div>
+            需要注意的是：生成的input不能编辑修改
         => v-show 控制控件的显示隐藏(无论隐藏与否都会添加到DOM，通过添加style="display:none;"实现隐藏)
             v-show与v-if v-else-if v-else这两种方式的选择： 如果控件显示和隐藏很频繁，选择v-show，反之，选择v-if v-else-if v-else
         => v-on 监听事件  <div v-on:click="onClick">点击弹出告警框</div>

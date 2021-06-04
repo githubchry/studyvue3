@@ -19,7 +19,10 @@
                 firstName: 'Hello',
                 lastName: 'World',
                 count: 10,  // 数量
-                price: 15   // 单价
+                price: 15,   // 单价
+                tableData: {
+                    a: 1
+                }
             }
         },
         //  methods, computed, watch => 优先使用 computed 去做三者都能实现的功能 （缓存优势，而且更简洁）
@@ -58,11 +61,17 @@
         },
         // 监听数据，发生变化时自动回调 异步请求
         watch: {
-            price: function (newPrice) {
-                console.log('侦听器：price发生了变化', newPrice);
+            price: function (newData, oldData) {
+                console.log('侦听器：price发生了变化', newData);
             },
-            count: function (newcCount) {
-                console.log('侦听器：count发生了变化', newcCount);
+            count: function (newData, oldData) {
+                console.log('侦听器：count发生了变化', newData);
+            },
+            tableData: {
+                handler(newData, oldData) {
+                    console.log('侦听器：tableData或其子节点 发生了变化');
+                },
+                deep: true  // 使用deep属性进行深度监听 默认只能监听tableData的赋值 而不能监听tableData.a的值
             }
         },
         // 模板 vue会优先使用template配置的内容，没有声明template则使用root div内部的数据作为模板
